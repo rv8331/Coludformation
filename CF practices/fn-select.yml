@@ -1,0 +1,19 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Create Ec2 instance"
+
+Parameters:
+  Environment: 
+    Type: String
+    AllowedValues:
+      - dev
+      - qa
+
+Conditions:
+  CreateResources: !Equals [ !Ref Environment, qa ]
+
+Resources:
+  Instance: # logical id
+    Type: AWS::EC2::Instance # type 
+    Properties:
+      InstanceType: !If [CreateResources, !Select [ 0, [t2.micro, t2.small] ], !Select [ 1, [t2.micro, t2.nano] ]  ] 
+      ImageId: ami-052cef05d01020f1d
